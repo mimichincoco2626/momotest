@@ -1,581 +1,329 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台灣媽媽專屬身分證產生器</title>
+    <!-- 載入 React 與 Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 載入 Lucide 圖標 -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
-<body>
-<p class="p1">import React, { useState, useRef } from 'react';</p>
-<p class="p1">import { Camera, Download, RefreshCw, Heart, Star, ShieldAlert, Moon, Zap, Coffee, Quote, ChevronRight, User, Calendar } from 'lucide-react';</p>
-<p class="p2"><br></p>
-<p class="p1">const App = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const [step, setStep] = useState('welcome'); // welcome, quiz, result</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const [currentQuestion, setCurrentQuestion] = useState(0);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const [scores, setScores] = useState({ L: 0, K: 0, C: 0, P: 0 }); // Lion, Kangaroo, Koala, Penguin</p>
-<p class="p2"><span class="Apple-converted-space">  </span></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const currentYear = new Date().getFullYear();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const years = Array.from({ length: 50 }, (_, i) =&gt; currentYear - i);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const [formData, setFormData] = useState({</p>
-<p class="p1"><span class="Apple-converted-space">    </span>name: '水媽咪',</p>
-<p class="p1"><span class="Apple-converted-space">    </span>becomeMomYear: currentYear.toString(),</p>
-<p class="p1"><span class="Apple-converted-space">    </span>title: '',</p>
-<p class="p1"><span class="Apple-converted-space">    </span>animal: '',</p>
-<p class="p1"><span class="Apple-converted-space">    </span>animalEmoji: '🦁',</p>
-<p class="p1"><span class="Apple-converted-space">    </span>description: '', // 特色形容</p>
-<p class="p1"><span class="Apple-converted-space">    </span>encouragement: '', // 讚美與鼓勵</p>
-<p class="p1"><span class="Apple-converted-space">    </span>power: '',</p>
-<p class="p1"><span class="Apple-converted-space">    </span>weakness: '',</p>
-<p class="p1"><span class="Apple-converted-space">    </span>sleepIndex: 50,</p>
-<p class="p1"><span class="Apple-converted-space">    </span>breakdownIndex: 50,</p>
-<p class="p1"><span class="Apple-converted-space">    </span>issueDate: new Date().toISOString().split('T')[0],</p>
-<p class="p1"><span class="Apple-converted-space">    </span>idNumber: `MOM${Math.floor(100000 + Math.random() * 900000)}`</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const [profileImage, setProfileImage] = useState(null);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const canvasRef = useRef(null);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// 計算年資</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const calculateSeniority = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const seniority = currentYear - parseInt(formData.becomeMomYear);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>return seniority === 0 ? "新手上任" : `${seniority} 年`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const quizData = [</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>question: "當妳走進客廳看到滿地的玩具，妳的第一反應是？",</p>
-<p class="p1"><span class="Apple-converted-space">      </span>options: [</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ text: "立刻大吼：『我數到三，通通收好！』", type: "L" },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ text: "默默開始動手收，邊收邊嘮叨", type: "K" },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ text: "假裝沒看到，跨過去繼續走向沙發", type: "C" },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ text: "叫老公過來處理，這不歸我管", type: "P" }</p>
-<p class="p1"><span class="Apple-converted-space">      </span>]</p>
-<p class="p1"><span class="Apple-converted-space">    </span>},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>question: "假日全家出遊，妳通常扮演什麼角色？",</p>
-<p class="p1"><span class="Apple-converted-space">      </span>options: [</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ text: "軍師導遊：行蹤進度精確掌控", type: "L" },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ text: "百寶袋：隨身帶著濕紙巾、零食與備用衣物", type: "K" },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ text: "隨行攝影：看風景第一，拍照第二", type: "C" },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ text: "後勤主管：負責開車或訂餐廳", type: "P" }</p>
-<p class="p1"><span class="Apple-converted-space">      </span>]</p>
-<p class="p1"><span class="Apple-converted-space">    </span>},</p>
-<p class="p1"><span class="Apple-converted-space">    </span>{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>question: "深夜好不容易把孩子哄睡了，妳會做什麼？",</p>
-<p class="p1"><span class="Apple-converted-space">      </span>options: [</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ text: "開始檢視明天清單，準備工作", type: "L" },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ text: "趕快去洗衣服或折衣服", type: "K" },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ text: "立刻昏睡，或是報復性刷手機", type: "C" },</p>
-<p class="p1"><span class="Apple-converted-space">        </span>{ text: "喝杯咖啡或小酒，享受片刻寧靜", type: "P" }</p>
-<p class="p1"><span class="Apple-converted-space">      </span>]</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>];</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const handleAnswer = (type) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const newScores = { ...scores, [type]: scores[type] + 1 };</p>
-<p class="p1"><span class="Apple-converted-space">    </span>setScores(newScores);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (currentQuestion &lt; quizData.length - 1) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>setCurrentQuestion(currentQuestion + 1);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>generateResult(newScores);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const generateResult = (finalScores) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const maxType = Object.keys(finalScores).reduce((a, b) =&gt; finalScores[a] &gt; finalScores[b] ? a : b);</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>let result = {};</p>
-<p class="p1"><span class="Apple-converted-space">    </span>switch(maxType) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>case 'L':<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>result = {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>animal: '萬獸之王獅子',<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>emoji: '🦁',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>title: '高效威嚴導師型',<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>description: '威嚴而果斷，家中的正義使者，效率與秩序的化身。',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>encouragement: '有妳在，家裡的一切都井然有序，妳是家人最堅強的後盾！',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>power: '氣場瞬間鎮壓全場',<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>weakness: '孩子撒嬌的眼神',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>sleep: 40, breakdown: 80</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>break;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>case 'K':<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>result = {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>animal: '全能育兒袋鼠',<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>emoji: '🦘',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>title: '溫馨百寶袋型',<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>description: '溫柔而強大，百寶袋般的守護者，愛與細心的代表。',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>encouragement: '妳無微不至的關懷讓愛溢滿家園，妳是家人心中最溫暖的避風港！',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>power: '精準定位家中任何雜物',<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>weakness: '百貨公司換季折扣',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>sleep: 90, breakdown: 30</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>break;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>case 'C':<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>result = {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>animal: '佛系軟萌無尾熊',<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>emoji: '🐨',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>title: '優雅隨緣型',<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>description: '佛系而自在，家中的和平大使，溫和與安定的力量。',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>encouragement: '妳從容不迫的態度讓生活變得很舒壓，妳是讓家人放鬆的魔法師！',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>power: '三秒入睡的超能力',<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>weakness: '早起與運動',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>sleep: 10, breakdown: 15</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>break;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>case 'P':<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>result = {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>animal: '理智生存企鵝',<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>emoji: '🐧',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>title: '理智冷靜隊友型',<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>description: '理智而可靠，家中的神隊友，智慧與分工的專家。',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>encouragement: '妳清晰的邏輯讓問題總能迎刃而解，妳是家人最信賴的智囊軍師！',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>power: '極端環境下的求生本能',<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">          </span>weakness: '老公的家事能力',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>sleep: 60, breakdown: 50</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>break;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>default: break;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>setFormData(prev =&gt; ({</p>
-<p class="p1"><span class="Apple-converted-space">      </span>...prev,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>title: result.title,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>animal: result.animal,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>animalEmoji: result.emoji,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>description: result.description,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>encouragement: result.encouragement,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>power: result.power,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>weakness: result.weakness,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>sleepIndex: result.sleep,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>breakdownIndex: result.breakdown</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>setStep('result');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const handleInputChange = (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const { name, value } = e.target;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>setFormData(prev =&gt; ({ ...prev, [name]: value }));</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const handleImageUpload = (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const file = e.target.files[0];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (file) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const reader = new FileReader();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>reader.onload = (event) =&gt; setProfileImage(event.target.result);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>reader.readAsDataURL(file);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const drawProgress = (ctx, x, y, width, height, value, color) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#f3f4f6';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillRect(x, y, width, height);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = color;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillRect(x, y, width * (value / 100), height);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const wrapText = (ctx, text, x, y, maxWidth, lineHeight) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const chars = text.split('');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let line = '';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let testY = y;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>for (let n = 0; n &lt; chars.length; n++) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>let testLine = line + chars[n];</p>
-<p class="p1"><span class="Apple-converted-space">      </span>let metrics = ctx.measureText(testLine);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>let testWidth = metrics.width;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if (testWidth &gt; maxWidth &amp;&amp; n &gt; 0) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.fillText(line, x, testY);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>line = chars[n];</p>
-<p class="p1"><span class="Apple-converted-space">        </span>testY += lineHeight;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>line = testLine;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText(line, x, testY);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>return testY;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>const downloadIDCard = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const canvas = canvasRef.current;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const ctx = canvas.getContext('2d');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const width = 1000;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const height = 630;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>canvas.width = width;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>canvas.height = height;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 1. 背景底圖</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#ffffff';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillRect(0, 0, width, height);</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 淡淡的幾何背景底紋</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.strokeStyle = '#fff0f3';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.lineWidth = 1;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>for (let i = 0; i &lt; width; i += 30) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.moveTo(i, 0);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineTo(width - (i/2), height);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>ctx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 2. 卡片邊框</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.strokeStyle = '#fbcfe8';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.lineWidth = 3;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.strokeRect(15, 15, width - 30, height - 30);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 3. 標頭區</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#db2777';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.arc(80, 80, 35, 0, Math.PI * 2);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#ffffff';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = 'bold 32px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.textAlign = 'center';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText('❤', 80, 92);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#374151';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = 'bold 42px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.textAlign = 'center';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText('台灣媽媽專屬身分證', width / 2, 90);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 4. 主要文字內容</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.textAlign = 'left';</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 姓名</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#db2777';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = '22px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText('姓 名', 60, 185);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#000000';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = 'bold 54px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText(formData.name, 150, 200);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 成為媽媽年份與年資</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#db2777';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = '22px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText('成 為 媽 媽', 60, 260);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText('年 份', 60, 290);</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#000000';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = 'bold 32px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const yearText = `西元 ${formData.becomeMomYear} 年`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText(yearText, 185, 290);</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>const yearWidth = ctx.measureText(yearText).width;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const seniorityLabelX = 185 + yearWidth + 80;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#db2777';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = '22px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText('媽 媽 年 資', seniorityLabelX, 290);</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>const seniorityLabelWidth = ctx.measureText('媽 媽 年 資').width;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const seniorityValueX = seniorityLabelX + seniorityLabelWidth + 20;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#db2777';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = 'bold 32px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText(calculateSeniority(), seniorityValueX, 290);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 角色</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#db2777';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = '22px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText('角 色', 60, 360);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#4b5563';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = 'bold 28px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText(`${formData.animal} (${formData.title})`, 150, 360);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 5. 金句方框</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#fdf2f8';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillRect(60, 400, 620, 135);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.strokeStyle = '#fbcfe8';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.lineWidth = 1;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.strokeRect(60, 400, 620, 135);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#1f2937';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = 'bold 24px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let nextY = wrapText(ctx, formData.description, 85, 445, 580, 36);</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#db2777';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = 'italic 20px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>wrapText(ctx, `🌟 ${formData.encouragement}`, 85, nextY + 45, 580, 28);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 6. 生活指標 (調整為兩項且加寬間距)</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const idxY = 580;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = 'bold 18px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#db2777';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText('睡眠負債', 60, idxY);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>drawProgress(ctx, 145, idxY - 14, 120, 12, formData.sleepIndex, '#ec4899');</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText('崩潰指數', 330, idxY);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>drawProgress(ctx, 415, idxY - 14, 120, 12, formData.breakdownIndex, '#ef4444');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 7. 底部證號與 Logo</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = 'bold 44px Courier, monospace';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#be185d';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.textAlign = 'right';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText(formData.idNumber, 800, 600);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.save();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.translate(920, 560);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#db2777';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.arc(0, 0, 15, 0, Math.PI * 2);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.font = 'bold 16px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.textAlign = 'center';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillText('親子天下', 0, 40);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.restore();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// 8. 照片</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = '#f9fafb';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillRect(720, 160, 240, 310);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.strokeStyle = '#e5e7eb';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>ctx.strokeRect(720, 160, 240, 310);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>if (profileImage) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const img = new Image();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>img.src = profileImage;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>img.onload = () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>ctx.drawImage(img, 720, 160, 240, 310);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>finalize();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};</p>
-<p class="p1"><span class="Apple-converted-space">    </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.font = '150px sans-serif';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.textAlign = 'center';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.fillText(formData.animalEmoji, 840, 370);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>finalize();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function finalize() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const link = document.createElement('a');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>link.download = `台灣媽媽身分證-${formData.name}.png`;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>link.href = canvas.toDataURL('image/png');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>link.click();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>return (</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div className="min-h-screen bg-gray-100 py-4 sm:py-8 px-4 font-sans text-gray-800 flex flex-col items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div className="w-full max-w-4xl mx-auto"&gt;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>{step === 'welcome' &amp;&amp; (</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div className="bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border border-pink-100 text-center animate-in fade-in duration-500"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;Heart className="w-12 h-12 sm:w-16 sm:h-16 text-pink-600 mx-auto mb-4 animate-bounce" fill="#db2777" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h1 className="text-2xl sm:text-4xl font-black text-pink-600 mb-4"&gt;台灣媽媽角色屬性測驗&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p className="text-gray-500 mb-8 text-base sm:text-lg"&gt;三題測出妳的專屬動物角色，並領取專屬媽媽身分證！&lt;/p&gt;</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-8 text-left"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;label className="block text-xs font-bold text-gray-400 mb-2 flex items-center gap-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                   </span>&lt;User className="w-4 h-4" /&gt; 輸入妳的名字</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;input<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                  </span>type="text"<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                  </span>value={formData.name}<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                  </span>onChange={(e) =&gt; setFormData({...formData, name: e.target.value})}</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>className="w-full px-4 py-3 border-2 border-gray-100 rounded-2xl text-lg font-bold outline-none focus:border-pink-500 shadow-inner bg-gray-50 transition-all"</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>placeholder="妳的名字"</p>
-<p class="p1"><span class="Apple-converted-space">                </span>/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;label className="block text-xs font-bold text-gray-400 mb-2 flex items-center gap-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;Calendar className="w-4 h-4" /&gt; 成為媽媽的西元年份</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;select<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                  </span>name="becomeMomYear"</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>value={formData.becomeMomYear}</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>onChange={handleInputChange}</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>className="w-full px-4 py-3 border-2 border-gray-100 rounded-2xl text-lg font-bold outline-none focus:border-pink-500 shadow-inner bg-gray-50 transition-all"</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>{years.map(y =&gt; (</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;option key={y} value={y}&gt;{y} 年&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>))}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">              </span>onClick={() =&gt; setStep('quiz')}</p>
-<p class="p1"><span class="Apple-converted-space">              </span>className="w-full sm:w-auto bg-pink-600 text-white px-12 py-4 rounded-full text-xl font-bold hover:bg-pink-700 transition-all shadow-lg hover:shadow-pink-200 flex items-center justify-center gap-2 mx-auto active:scale-95"</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>開始測驗 &lt;ChevronRight /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>)}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>{step === 'quiz' &amp;&amp; (</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div className="bg-white p-5 sm:p-8 rounded-3xl shadow-2xl border border-gray-100 animate-in slide-in-from-right-4 duration-300"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="flex justify-between items-center mb-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;span className="text-pink-600 font-bold text-sm sm:text-base"&gt;第 {currentQuestion + 1} / {quizData.length} 題&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;div className="h-2 w-24 sm:w-32 bg-gray-100 rounded-full overflow-hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="h-full bg-pink-600 transition-all duration-300" style={{width: `${((currentQuestion + 1) / quizData.length) * 100}%`}}&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800 leading-snug"&gt;{quizData[currentQuestion].question}&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="space-y-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>{quizData[currentQuestion].options.map((opt, idx) =&gt; (</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;button</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>key={idx}</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>onClick={() =&gt; handleAnswer(opt.type)}</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>className="w-full p-4 sm:p-5 text-left border-2 border-gray-50 rounded-2xl hover:border-pink-400 hover:bg-pink-50 transition-all text-base sm:text-lg font-medium text-gray-700 shadow-sm active:bg-pink-100"</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>{opt.text}</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>))}</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>)}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>{step === 'result' &amp;&amp; (</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 w-full"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide flex justify-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;div className="relative min-w-[320px] max-w-[650px] w-full aspect-[1.58/1] bg-white rounded-xl border border-gray-300 shadow-xl overflow-hidden p-3 sm:p-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#db2777 0.5px, transparent 0.5px)', backgroundSize: '10px 10px' }}&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                </span></p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="relative z-10 h-full flex flex-col"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="flex items-center justify-between mb-4 sm:mb-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div className="w-6 h-6 sm:w-10 sm:h-10 bg-pink-600 rounded-full flex items-center justify-center text-white text-[10px] sm:text-base"&gt;❤&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h3 className="text-base sm:text-2xl font-bold text-gray-700 tracking-widest"&gt;台灣媽媽專屬身分證&lt;/h3&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div className="w-10 hidden sm:block"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                  </span></p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="flex gap-3 sm:gap-6 flex-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div className="flex-1 space-y-2 sm:space-y-4 text-left"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;div className="flex items-baseline gap-2 sm:gap-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span className="text-[10px] sm:text-sm font-medium text-pink-600 whitespace-nowrap"&gt;姓 名&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span className="text-lg sm:text-3xl font-bold text-black border-b border-gray-100 pb-1 flex-1"&gt;{formData.name}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                      </span></p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;div className="flex items-center gap-2 sm:gap-6 flex-wrap"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div className="flex items-center gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                           </span>&lt;div className="flex flex-col text-[8px] sm:text-xs text-pink-600 font-medium leading-tight"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span&gt;成 為 媽 媽&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;span&gt;年 份&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                           </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                           </span>&lt;span className="text-sm sm:text-xl font-bold text-gray-800"&gt;西元 {formData.becomeMomYear} 年&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div className="flex items-center gap-1 sm:gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                          </span>&lt;span className="text-[8px] sm:text-xs text-pink-600 font-medium whitespace-nowrap"&gt;媽媽年資&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                          </span>&lt;span className="text-sm sm:text-xl font-bold text-pink-700 whitespace-nowrap"&gt;{calculateSeniority()}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;div className="flex items-baseline gap-2 sm:gap-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span className="text-[10px] sm:text-sm font-medium text-pink-600 whitespace-nowrap"&gt;角 色&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span className="text-[10px] sm:text-lg font-bold text-gray-600 leading-tight"&gt;{formData.animal} &lt;span className="text-[8px] sm:text-sm font-normal text-gray-400"&gt;({formData.title})&lt;/span&gt;&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                      </span></p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;div className="bg-pink-50/40 border border-pink-100 py-1 sm:py-2 px-2 sm:px-3 rounded-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                          </span>&lt;p className="text-[9px] sm:text-sm font-bold text-gray-800 leading-tight mb-1"&gt;{formData.description}&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                          </span>&lt;p className="text-[8px] sm:text-xs font-medium italic text-pink-600 flex items-center gap-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;Star className="w-2 h-2 fill-pink-600" /&gt; {formData.encouragement}</p>
-<p class="p1"><span class="Apple-converted-space">                          </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">                      </span>{/* 調整為兩欄式的指標區 */}</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;div className="grid grid-cols-2 gap-4 text-[7px] sm:text-[10px]"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                          </span>&lt;div className="flex flex-col gap-0.5"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                              </span>&lt;span className="font-bold text-pink-600"&gt;睡眠負債 {formData.sleepIndex}%&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                              </span>&lt;div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                  </span>&lt;div className="h-full bg-pink-500" style={{width: `${formData.sleepIndex}%`}}&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                              </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                          </span>&lt;div className="flex flex-col gap-0.5"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                              </span>&lt;span className="font-bold text-red-600"&gt;崩潰指數 {formData.breakdownIndex}%&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                              </span>&lt;div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                  </span>&lt;div className="h-full bg-red-400" style={{width: `${formData.breakdownIndex}%`}}&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                              </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                    </span></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div className="w-24 sm:w-44 flex flex-col items-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;div className="w-full aspect-[3/4] bg-gray-50 rounded-sm border border-gray-200 shadow-inner overflow-hidden flex items-center justify-center mb-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{profileImage ? (</p>
-<p class="p1"><span class="Apple-converted-space">                          </span>&lt;img src={profileImage} alt="Profile" className="w-full h-full object-cover" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>) : (</p>
-<p class="p1"><span class="Apple-converted-space">                          </span>&lt;div className="text-5xl sm:text-8xl select-none"&gt;{formData.animalEmoji}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>)}</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;div className="text-[6px] sm:text-[10px] text-gray-400 font-mono italic"&gt;ISSUED: {formData.issueDate}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                  </span></p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="mt-2 sm:mt-4 flex justify-between items-end border-t border-gray-50 pt-1"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                     </span>&lt;div className="text-base sm:text-3xl font-bold font-mono text-pink-700 opacity-60 tracking-tighter pr-10"&gt;{formData.idNumber}&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">                     </span></p>
-<p class="p1"><span class="Apple-converted-space">                     </span>&lt;div className="flex flex-col items-center flex-shrink-0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;Heart className="w-2 h-2 sm:w-4 sm:h-4 text-pink-500 fill-pink-500" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span className="text-[6px] sm:text-[10px] font-black text-pink-500 tracking-tighter"&gt;親子天下&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                     </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div className="grid grid-cols-1 md:grid-cols-2 gap-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;div className="bg-white p-5 rounded-3xl shadow-xl space-y-4 border border-gray-100"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;h4 className="font-bold text-pink-600 flex items-center gap-2 text-sm sm:text-base"&gt;&lt;User className="w-4 h-4" /&gt; 完善個人證件&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div className="space-y-3 text-left"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;div className="grid grid-cols-2 gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div className="text-xs"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;label className="block text-gray-400 font-bold mb-1"&gt;上任年份&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;select<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                        </span>name="becomeMomYear"</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>value={formData.becomeMomYear}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>onChange={handleInputChange}</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>className="w-full px-2 py-2 border border-gray-100 rounded-lg text-sm outline-none bg-white focus:border-pink-400 transition-all"</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>{years.map(y =&gt; (</p>
-<p class="p1"><span class="Apple-converted-space">                          </span>&lt;option key={y} value={y}&gt;{y} 年&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>))}</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div className="flex items-end"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;label className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-pink-50 text-pink-600 rounded-xl cursor-pointer hover:bg-pink-100 transition-colors border-2 border-dashed border-pink-200 font-bold text-xs sm:text-sm shadow-sm"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;Camera className="w-4 h-4" /&gt; 上傳照片</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                      </span>&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;button<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">                    </span>onClick={() =&gt; {setStep('welcome'); setCurrentQuestion(0); setScores({ L: 0, K: 0, C: 0, P: 0 });}}</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>className="w-full py-3 text-gray-400 font-bold flex items-center justify-center gap-2 hover:text-pink-600 transition-all bg-gray-50 rounded-xl text-sm border border-transparent hover:border-gray-100"</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;RefreshCw className="w-4 h-4" /&gt; 重新測驗</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">              </span></p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;div className="bg-gradient-to-br from-gray-700 to-gray-800 p-5 rounded-3xl shadow-xl flex flex-col justify-center text-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;p className="text-white font-bold mb-4 text-sm sm:text-base flex items-center justify-center gap-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;Star className="w-4 h-4 text-yellow-400 fill-yellow-400" /&gt; 分析結果：妳是「{formData.animal}」</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;button</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>onClick={downloadIDCard}</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>className="bg-pink-600 text-white hover:bg-pink-700 font-black py-4 rounded-2xl flex items-center justify-center gap-2 transition-transform active:scale-95 shadow-lg group"</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                  </span>&lt;Download className="w-6 h-6 group-hover:bounce" /&gt; 下載正式身分證</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>)}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;footer className="mt-8 mb-4 text-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;p className="text-gray-400 text-xs sm:text-sm font-medium flex items-center justify-center gap-1 px-4 leading-relaxed"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>由親子天下媒體中心策劃製作 &lt;Heart className="w-3 h-3 fill-gray-300" /&gt; 向所有台灣超人媽媽致敬</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/footer&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;canvas ref={canvasRef} className="hidden" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>);</p>
-<p class="p1">};</p>
-<p class="p2"><br></p>
-<p class="p1">export default App;</p>
+<body class="bg-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
+
+        // 定義簡單的圖標組件 (因為 CDN 環境下直接使用 Lucide React 需要額外配置)
+        const Icon = ({ name, className = "w-4 h-4" }) => {
+            useEffect(() => {
+                lucide.createIcons();
+            }, []);
+            return <i data-lucide={name} className={className}></i>;
+        };
+
+        const App = () => {
+            const [step, setStep] = useState('welcome');
+            const [currentQuestion, setCurrentQuestion] = useState(0);
+            const [scores, setScores] = useState({ L: 0, K: 0, C: 0, P: 0 });
+            const currentYear = new Date().getFullYear();
+            const years = Array.from({ length: 60 }, (_, i) => currentYear - i);
+
+            const [formData, setFormData] = useState({
+                name: '水媽咪',
+                becomeMomYear: currentYear.toString(),
+                title: '',
+                animal: '',
+                animalEmoji: '🦁',
+                description: '',
+                encouragement: '',
+                sleepIndex: 50,
+                breakdownIndex: 50,
+                issueDate: new Date().toISOString().split('T')[0],
+                idNumber: `MOM${Math.floor(100000 + Math.random() * 900000)}`
+            });
+
+            const [profileImage, setProfileImage] = useState(null);
+            const canvasRef = useRef(null);
+
+            const calculateSeniority = () => {
+                const seniority = currentYear - parseInt(formData.becomeMomYear);
+                return seniority === 0 ? "新手上任" : `${seniority} 年`;
+            };
+
+            const quizData = [
+                {
+                    question: "當妳走進客廳看到滿地的玩具，妳的第一反應是？",
+                    options: [
+                        { text: "立刻大吼：『我數到三，通通收好！』", type: "L" },
+                        { text: "默默開始動手收，邊收邊嘮叨", type: "K" },
+                        { text: "假裝沒看到，跨過去繼續走向沙發", type: "C" },
+                        { text: "叫老公過來處理，這不歸我管", type: "P" }
+                    ]
+                },
+                {
+                    question: "假日全家出遊，妳通常扮演什麼角色？",
+                    options: [
+                        { text: "軍師導遊：行蹤進度精確掌控", type: "L" },
+                        { text: "百寶袋：隨身帶著濕紙巾、零食與備用衣物", type: "K" },
+                        { text: "隨行攝影：看風景第一，拍照第二", type: "C" },
+                        { text: "後勤主管：負責開車或訂餐廳", type: "P" }
+                    ]
+                },
+                {
+                    question: "深夜好不容易把孩子哄睡了，妳會做什麼？",
+                    options: [
+                        { text: "開始檢視明天清單，準備工作", type: "L" },
+                        { text: "趕快去洗衣服或折衣服", type: "K" },
+                        { text: "立刻昏睡，或是報復性刷手機", type: "C" },
+                        { text: "喝杯咖啡或小酒，享受片刻寧靜", type: "P" }
+                    ]
+                }
+            ];
+
+            const handleAnswer = (type) => {
+                const newScores = { ...scores, [type]: scores[type] + 1 };
+                setScores(newScores);
+                if (currentQuestion < quizData.length - 1) {
+                    setCurrentQuestion(currentQuestion + 1);
+                } else {
+                    generateResult(newScores);
+                }
+            };
+
+            const generateResult = (finalScores) => {
+                const maxType = Object.keys(finalScores).reduce((a, b) => finalScores[a] > finalScores[b] ? a : b);
+                let result = {};
+                switch(maxType) {
+                    case 'L': result = { animal: '萬獸之王獅子', emoji: '🦁', title: '高效威嚴導師型', description: '威嚴而果斷，家中的正義使者，效率與秩序的化身。', encouragement: '有妳在，家裡的一切都井然有序，妳是家人最堅強的後盾！', sleep: 40, breakdown: 80 }; break;
+                    case 'K': result = { animal: '全能育兒袋鼠', emoji: '🦘', title: '溫馨百寶袋型', description: '溫柔而強大，百寶袋般的守護者，愛與細心的代表。', encouragement: '妳無微不至的關懷讓愛溢滿家園，妳是家人心中最溫暖的避風港！', sleep: 90, breakdown: 30 }; break;
+                    case 'C': result = { animal: '佛系軟萌無尾熊', emoji: '🐨', title: '優雅隨緣型', description: '佛系而自在，家中的和平大使，溫和與安定的力量。', encouragement: '妳從容不迫的態度讓生活變得很舒壓，妳是讓家人放鬆的魔法師！', sleep: 10, breakdown: 15 }; break;
+                    case 'P': result = { animal: '理智生存企鵝', emoji: '🐧', title: '理智冷靜隊友型', description: '理智而可靠，家中的神隊友，智慧與分工的專家。', encouragement: '妳清晰的邏輯讓問題總能迎刃而解，妳是家人最信賴的智囊軍師！', sleep: 60, breakdown: 50 }; break;
+                }
+                setFormData(prev => ({ ...prev, title: result.title, animal: result.animal, animalEmoji: result.emoji, description: result.description, encouragement: result.encouragement, sleepIndex: result.sleep, breakdownIndex: result.breakdown }));
+                setStep('result');
+            };
+
+            const handleImageUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => setProfileImage(event.target.result);
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const wrapText = (ctx, text, x, y, maxWidth, lineHeight) => {
+                const chars = text.split('');
+                let line = '';
+                let testY = y;
+                for (let n = 0; n < chars.length; n++) {
+                    let testLine = line + chars[n];
+                    let metrics = ctx.measureText(testLine);
+                    if (metrics.width > maxWidth && n > 0) {
+                        ctx.fillText(line, x, testY);
+                        line = chars[n];
+                        testY += lineHeight;
+                    } else { line = testLine; }
+                }
+                ctx.fillText(line, x, testY);
+                return testY;
+            };
+
+            const downloadIDCard = () => {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                const width = 1000, height = 630;
+                canvas.width = width; canvas.height = height;
+
+                ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, width, height);
+                ctx.strokeStyle = '#fff0f3'; ctx.lineWidth = 1;
+                for (let i = 0; i < width; i += 30) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(width - (i/2), height); ctx.stroke(); }
+                ctx.strokeStyle = '#fbcfe8'; ctx.lineWidth = 3; ctx.strokeRect(15, 15, width - 30, height - 30);
+
+                ctx.fillStyle = '#db2777'; ctx.beginPath(); ctx.arc(80, 80, 35, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 32px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('❤', 80, 92);
+                ctx.fillStyle = '#374151'; ctx.font = 'bold 42px sans-serif'; ctx.fillText('台灣媽媽專屬身分證', width / 2, 90);
+
+                ctx.textAlign = 'left';
+                ctx.fillStyle = '#db2777'; ctx.font = '22px sans-serif'; ctx.fillText('姓 名', 60, 185);
+                ctx.fillStyle = '#000000'; ctx.font = 'bold 54px sans-serif'; ctx.fillText(formData.name, 150, 200);
+
+                ctx.fillStyle = '#db2777'; ctx.font = '22px sans-serif'; ctx.fillText('成 為 媽 媽', 60, 260); ctx.fillText('年 份', 60, 290);
+                ctx.fillStyle = '#000000'; ctx.font = 'bold 32px sans-serif';
+                const yearText = `西元 ${formData.becomeMomYear} 年`;
+                ctx.fillText(yearText, 185, 290);
+                const yearWidth = ctx.measureText(yearText).width;
+
+                const seniorityLabelX = 185 + yearWidth + 80;
+                ctx.fillStyle = '#db2777'; ctx.font = '22px sans-serif'; ctx.fillText('媽 媽 年 資', seniorityLabelX, 290);
+                const seniorityValueX = seniorityLabelX + ctx.measureText('媽 媽 年 資').width + 20;
+                ctx.font = 'bold 32px sans-serif'; ctx.fillText(calculateSeniority(), seniorityValueX, 290);
+
+                ctx.fillStyle = '#db2777'; ctx.font = '22px sans-serif'; ctx.fillText('角 色', 60, 360);
+                ctx.fillStyle = '#4b5563'; ctx.font = 'bold 28px sans-serif'; ctx.fillText(`${formData.animal} (${formData.title})`, 150, 360);
+
+                ctx.fillStyle = '#fdf2f8'; ctx.fillRect(60, 400, 620, 135);
+                ctx.strokeStyle = '#fbcfe8'; ctx.strokeRect(60, 400, 620, 135);
+                ctx.fillStyle = '#1f2937'; ctx.font = 'bold 24px sans-serif';
+                let nextY = wrapText(ctx, formData.description, 85, 445, 580, 36);
+                ctx.fillStyle = '#db2777'; ctx.font = 'italic 20px sans-serif';
+                wrapText(ctx, `🌟 ${formData.encouragement}`, 85, nextY + 45, 580, 28);
+
+                const idxY = 580;
+                const drawP = (x, y, v, c) => { ctx.fillStyle = '#f3f4f6'; ctx.fillRect(x, y, 120, 12); ctx.fillStyle = c; ctx.fillRect(x, y, 120 * (v/100), 12); };
+                ctx.font = 'bold 18px sans-serif'; ctx.fillStyle = '#db2777';
+                ctx.fillText('睡眠負債', 60, idxY); drawP(145, idxY - 14, formData.sleepIndex, '#ec4899');
+                ctx.fillText('崩潰指數', 330, idxY); drawP(415, idxY - 14, formData.breakdownIndex, '#ef4444');
+
+                ctx.font = 'bold 44px Courier, monospace'; ctx.fillStyle = '#be185d'; ctx.textAlign = 'right'; ctx.fillText(formData.idNumber, 800, 600);
+                ctx.save(); ctx.translate(920, 560); ctx.fillStyle = '#db2777'; ctx.beginPath(); ctx.arc(0, 0, 15, 0, Math.PI * 2); ctx.fill();
+                ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('親子天下', 0, 40); ctx.restore();
+
+                ctx.fillStyle = '#f9fafb'; ctx.fillRect(720, 160, 240, 310); ctx.strokeStyle = '#e5e7eb'; ctx.strokeRect(720, 160, 240, 310);
+                if (profileImage) {
+                    const img = new Image(); img.src = profileImage;
+                    img.onload = () => { ctx.drawImage(img, 720, 160, 240, 310); finalize(); };
+                } else {
+                    ctx.font = '150px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(formData.animalEmoji, 840, 370); finalize();
+                }
+
+                function finalize() {
+                    const link = document.createElement('a');
+                    link.download = `台灣媽媽身分證-${formData.name}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                }
+            };
+
+            return (
+                <div className="min-h-screen py-8 px-4 flex flex-col items-center">
+                    <div className="w-full max-w-4xl mx-auto">
+                        {step === 'welcome' && (
+                            <div className="bg-white p-6 sm:p-10 rounded-3xl shadow-2xl border border-pink-100 text-center animate-in fade-in duration-500">
+                                <Icon name="heart" className="w-12 h-12 sm:w-16 sm:h-16 text-pink-600 mx-auto mb-4 fill-pink-600" />
+                                <h1 className="text-2xl sm:text-4xl font-black text-pink-600 mb-4">台灣媽媽角色屬性測驗</h1>
+                                <p className="text-gray-500 mb-8 text-base sm:text-lg">三題測出妳的專屬動物角色，並領取專屬媽媽身分證！</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-8 text-left">
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-400 mb-2 flex items-center gap-1"><Icon name="user" /> 輸入妳的名字</label>
+                                        <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-3 border-2 border-gray-100 rounded-2xl text-lg font-bold outline-none focus:border-pink-500 shadow-inner bg-gray-50" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-400 mb-2 flex items-center gap-1"><Icon name="calendar" /> 成為媽媽的西元年份</label>
+                                        <select value={formData.becomeMomYear} onChange={(e) => setFormData({...formData, becomeMomYear: e.target.value})} className="w-full px-4 py-3 border-2 border-gray-100 rounded-2xl text-lg font-bold outline-none focus:border-pink-500 shadow-inner bg-gray-50">
+                                            {years.map(y => <option key={y} value={y}>{y} 年</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+                                <button onClick={() => setStep('quiz')} className="bg-pink-600 text-white px-12 py-4 rounded-full text-xl font-bold hover:bg-pink-700 transition-all flex items-center gap-2 mx-auto active:scale-95">開始測驗 <Icon name="chevron-right" /></button>
+                            </div>
+                        )}
+
+                        {step === 'quiz' && (
+                            <div className="bg-white p-5 sm:p-8 rounded-3xl shadow-2xl border border-gray-100 animate-in slide-in-from-right-4">
+                                <div className="flex justify-between items-center mb-6">
+                                    <span className="text-pink-600 font-bold text-sm sm:text-base">第 {currentQuestion + 1} / {quizData.length} 題</span>
+                                    <div className="h-2 w-24 sm:w-32 bg-gray-100 rounded-full overflow-hidden">
+                                        <div className="h-full bg-pink-600" style={{width: `${((currentQuestion + 1) / quizData.length) * 100}%`}}></div>
+                                    </div>
+                                </div>
+                                <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800">{quizData[currentQuestion].question}</h2>
+                                <div className="space-y-3">
+                                    {quizData[currentQuestion].options.map((opt, idx) => (
+                                        <button key={idx} onClick={() => handleAnswer(opt.type)} className="w-full p-4 sm:p-5 text-left border-2 border-gray-50 rounded-2xl hover:border-pink-400 hover:bg-pink-50 text-base sm:text-lg font-medium text-gray-700 active:bg-pink-100">{opt.text}</button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {step === 'result' && (
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 w-full">
+                                <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 flex justify-center scrollbar-hide">
+                                    <div className="relative min-w-[320px] max-w-[650px] w-full aspect-[1.58/1] bg-white rounded-xl border border-gray-300 shadow-xl overflow-hidden p-3 sm:p-6">
+                                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#db2777 0.5px, transparent 0.5px)', backgroundSize: '10px 10px' }}></div>
+                                        <div className="relative z-10 h-full flex flex-col">
+                                            <div className="flex items-center justify-between mb-4 sm:mb-8">
+                                                <div className="w-6 h-6 sm:w-10 sm:h-10 bg-pink-600 rounded-full flex items-center justify-center text-white text-[10px] sm:text-base">❤</div>
+                                                <h3 className="text-base sm:text-2xl font-bold text-gray-700 tracking-widest">台灣媽媽專屬身分證</h3>
+                                                <div className="w-10"></div>
+                                            </div>
+                                            <div className="flex gap-3 sm:gap-6 flex-1">
+                                                <div className="flex-1 space-y-2 sm:space-y-4 text-left">
+                                                    <div className="flex items-baseline gap-2 sm:gap-4"><span className="text-[10px] sm:text-sm font-medium text-pink-600 whitespace-nowrap">姓 名</span><span className="text-lg sm:text-3xl font-bold text-black border-b border-gray-100 pb-1 flex-1">{formData.name}</span></div>
+                                                    <div className="flex items-center gap-2 sm:gap-6 flex-wrap">
+                                                        <div className="flex items-center gap-2"><div className="flex flex-col text-[8px] sm:text-xs text-pink-600 font-medium leading-tight"><span>成 為 媽 媽</span><span>年 份</span></div><span className="text-sm sm:text-xl font-bold text-gray-800">西元 {formData.becomeMomYear} 年</span></div>
+                                                        <div className="flex items-center gap-1 sm:gap-2"><span className="text-[8px] sm:text-xs text-pink-600 font-medium">媽媽年資</span><span className="text-sm sm:text-xl font-bold text-pink-700">{calculateSeniority()}</span></div>
+                                                    </div>
+                                                    <div className="flex items-baseline gap-2 sm:gap-4"><span className="text-[10px] sm:text-sm font-medium text-pink-600 whitespace-nowrap">角 色</span><span className="text-[10px] sm:text-lg font-bold text-gray-600 leading-tight">{formData.animal} <span className="text-[8px] sm:text-sm font-normal text-gray-400">({formData.title})</span></span></div>
+                                                    <div className="bg-pink-50/40 border border-pink-100 py-1 sm:py-2 px-2 sm:px-3 rounded-sm">
+                                                        <p className="text-[9px] sm:text-sm font-bold text-gray-800 leading-tight mb-1">{formData.description}</p>
+                                                        <p className="text-[8px] sm:text-xs font-medium italic text-pink-600 flex items-center gap-1"><Icon name="star" className="w-2 h-2 fill-pink-600" /> {formData.encouragement}</p>
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-4 text-[7px] sm:text-[10px]">
+                                                        <div className="flex flex-col gap-0.5"><span className="font-bold text-pink-600">睡眠負債 {formData.sleepIndex}%</span><div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden"><div className="h-full bg-pink-500" style={{width: `${formData.sleepIndex}%`}}></div></div></div>
+                                                        <div className="flex flex-col gap-0.5"><span className="font-bold text-red-600">崩潰指數 {formData.breakdownIndex}%</span><div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden"><div className="h-full bg-red-400" style={{width: `${formData.breakdownIndex}%`}}></div></div></div>
+                                                    </div>
+                                                </div>
+                                                <div className="w-24 sm:w-44 flex flex-col items-center">
+                                                    <div className="w-full aspect-[3/4] bg-gray-50 rounded-sm border border-gray-200 shadow-inner flex items-center justify-center mb-1 overflow-hidden">
+                                                        {profileImage ? <img src={profileImage} className="w-full h-full object-cover" /> : <div className="text-5xl sm:text-8xl select-none">{formData.animalEmoji}</div>}
+                                                    </div>
+                                                    <div className="text-[6px] sm:text-[10px] text-gray-400 font-mono italic">ISSUED: {formData.issueDate}</div>
+                                                </div>
+                                            </div>
+                                            <div className="mt-2 sm:mt-4 flex justify-between items-end border-t border-gray-50 pt-1">
+                                                <div className="text-base sm:text-3xl font-bold font-mono text-pink-700 opacity-60 tracking-tighter pr-10">{formData.idNumber}</div>
+                                                <div className="flex flex-col items-center flex-shrink-0"><Icon name="heart" className="w-2 h-2 sm:w-4 sm:h-4 text-pink-500 fill-pink-500" /><span className="text-[6px] sm:text-[10px] font-black text-pink-500 tracking-tighter">親子天下</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="bg-white p-5 rounded-3xl shadow-xl space-y-4 border border-gray-100 text-left">
+                                        <h4 className="font-bold text-pink-600 flex items-center gap-2 text-sm sm:text-base"><Icon name="user" /> 完善個人證件</h4>
+                                        <div className="space-y-3">
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <div className="text-xs"><label className="block text-gray-400 font-bold mb-1">上任年份</label>
+                                                <select value={formData.becomeMomYear} onChange={(e) => setFormData({...formData, becomeMomYear: e.target.value})} className="w-full px-2 py-2 border border-gray-100 rounded-lg text-sm outline-none bg-white">
+                                                    {years.map(y => <option key={y} value={y}>{y} 年</option>)}
+                                                </select>
+                                                </div>
+                                                <div className="flex items-end"><label className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-pink-50 text-pink-600 rounded-xl cursor-pointer hover:bg-pink-100 border-2 border-dashed border-pink-200 font-bold text-xs sm:text-sm shadow-sm"><Icon name="camera" /> 上傳照片<input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" /></label></div>
+                                            </div>
+                                            <button onClick={() => {setStep('welcome'); setCurrentQuestion(0);}} className="w-full py-3 text-gray-400 font-bold flex items-center justify-center gap-2 hover:text-pink-600 transition-all bg-gray-50 rounded-xl text-sm border border-transparent hover:border-gray-100"><Icon name="refresh-cw" /> 重新測驗</button>
+                                        </div>
+                                    </div>
+                                    <div className="bg-gradient-to-br from-gray-700 to-gray-800 p-5 rounded-3xl shadow-xl flex flex-col justify-center text-center">
+                                        <p className="text-white font-bold mb-4 text-sm sm:text-base flex items-center justify-center gap-2"><Icon name="star" className="text-yellow-400 fill-yellow-400" /> 分析結果：妳是「{formData.animal}」</p>
+                                        <button onClick={downloadIDCard} className="bg-pink-600 text-white hover:bg-pink-700 font-black py-4 rounded-2xl flex items-center justify-center gap-2 active:scale-95 shadow-lg"><Icon name="download" /> 下載正式身分證</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        <footer className="mt-8 mb-4 text-center">
+                            <p className="text-gray-400 text-xs sm:text-sm font-medium flex items-center justify-center gap-1 px-4 leading-relaxed">由親子天下媒體中心策劃製作 <Icon name="heart" className="w-3 h-3 fill-gray-300 text-gray-300" /> 向所有台灣超人媽媽致敬</p>
+                        </footer>
+                    </div>
+                    <canvas ref={canvasRef} style={{ display: 'none' }}></canvas>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
