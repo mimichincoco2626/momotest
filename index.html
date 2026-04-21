@@ -19,7 +19,7 @@
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         .id-pattern {
             background-color: #ffffff;
-            background-image: radial-gradient(#db2777 0.6px, transparent 0.6px);
+            background-image: radial-gradient(#db2777 0.5px, transparent 0.5px);
             background-size: 15px 15px;
         }
         @keyframes fadeIn {
@@ -97,7 +97,7 @@
                         { text: "開始檢視明天清單，準備工作", type: "L" },
                         { text: "趕快去洗衣服或折衣服", type: "K" },
                         { text: "立刻昏睡，或是報復性刷手機", type: "C" },
-                        { text: "喝杯熱茶，享受片刻寧靜", type: "P" }
+                        { text: "喝杯熱茶，享受片片刻寧靜", type: "P" }
                     ]
                 }
             ];
@@ -158,71 +158,71 @@
                 for (let i = 0; i < width; i += 35) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(width - (i/2), height); ctx.stroke(); }
                 ctx.strokeStyle = '#fbcfe8'; ctx.lineWidth = 4; ctx.strokeRect(20, 20, width - 40, height - 40);
 
-                ctx.fillStyle = '#db2777'; ctx.beginPath(); ctx.arc(90, 90, 38, 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 36px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('❤', 90, 104);
-                ctx.fillStyle = '#374151'; ctx.font = 'bold 44px sans-serif'; ctx.fillText('台灣媽媽專屬身分證', width / 2, 100);
+                ctx.fillStyle = '#db2777'; ctx.beginPath(); ctx.arc(90, 90, 32, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 30px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('❤', 90, 102);
+                ctx.fillStyle = '#374151'; ctx.font = 'bold 38px sans-serif'; ctx.fillText('台灣媽媽專屬身分證', width / 2, 100);
 
                 ctx.textAlign = 'left';
-                // 3. 姓名
-                ctx.fillStyle = '#db2777'; ctx.font = '22px sans-serif'; ctx.fillText('姓 名', 70, 205);
-                ctx.fillStyle = '#000000'; ctx.font = 'bold 64px sans-serif'; ctx.fillText(formData.name, 170, 215);
+                // 3. 姓名 (縮小字級)
+                ctx.fillStyle = '#db2777'; ctx.font = '20px sans-serif'; ctx.fillText('姓 名', 70, 200);
+                ctx.fillStyle = '#000000'; ctx.font = 'bold 52px sans-serif'; ctx.fillText(formData.name, 170, 210);
 
-                // 重點修正：媽媽年資移到姓名右側空白區 (X=400)
+                // 年資位移 (縮小字級)
+                ctx.fillStyle = '#db2777'; ctx.font = '18px sans-serif'; 
+                ctx.fillText('媽媽年資', 420, 210);
+                ctx.fillStyle = '#db2777'; ctx.font = 'bold 32px sans-serif'; 
+                ctx.fillText(calculateSeniority(), 510, 210);
+
+                // 4. 年份 (縮小字級)
                 ctx.fillStyle = '#db2777'; ctx.font = '20px sans-serif'; 
-                ctx.fillText('媽媽年資', 400, 215);
-                ctx.fillStyle = '#db2777'; ctx.font = 'bold 38px sans-serif'; 
-                ctx.fillText(calculateSeniority(), 500, 215);
+                ctx.fillText('成 為 媽 媽', 70, 280); ctx.fillText('年 份', 70, 310);
+                ctx.fillStyle = '#000000'; ctx.font = 'bold 34px sans-serif';
+                ctx.fillText(`西元 ${formData.becomeMomYear} 年`, 210, 310);
 
-                // 4. 年份 (獨立一排)
-                ctx.fillStyle = '#db2777'; ctx.font = '22px sans-serif'; 
-                ctx.fillText('成 為 媽 媽', 70, 285); ctx.fillText('年 份', 70, 315);
-                ctx.fillStyle = '#000000'; ctx.font = 'bold 38px sans-serif';
-                ctx.fillText(`西元 ${formData.becomeMomYear} 年`, 210, 315);
+                // 5. 角色 (縮小字級)
+                ctx.fillStyle = '#db2777'; ctx.font = '20px sans-serif'; ctx.fillText('角 色', 70, 380);
+                ctx.fillStyle = '#4b5563'; ctx.font = 'bold 28px sans-serif'; ctx.fillText(`${formData.animal} (${formData.title})`, 170, 380);
 
-                // 5. 角色
-                ctx.fillStyle = '#db2777'; ctx.font = '22px sans-serif'; ctx.fillText('角 色', 70, 385);
-                ctx.fillStyle = '#4b5563'; ctx.font = 'bold 32px sans-serif'; ctx.fillText(`${formData.animal} (${formData.title})`, 170, 385);
-
-                // 6. 金句方框 (動態高度計算)
-                const boxY = 425;
+                // 6. 金句方框
+                const boxY = 415;
                 const tempCanvas = document.createElement('canvas');
                 const tempCtx = tempCanvas.getContext('2d');
-                tempCtx.font = 'bold 26px sans-serif';
-                let dY = wrapText(tempCtx, formData.description, 0, 0, 580, 38);
-                let tH = wrapText(tempCtx, `🌟 ${formData.encouragement}`, 0, dY + 45, 580, 30);
-                const bH = Math.max(120, tH + 60);
+                tempCtx.font = 'bold 24px sans-serif';
+                let dY = wrapText(tempCtx, formData.description, 0, 0, 580, 34);
+                let tH = wrapText(tempCtx, `🌟 ${formData.encouragement}`, 0, dY + 40, 580, 28);
+                const bH = Math.max(110, tH + 50);
                 
                 ctx.fillStyle = '#fdf2f8'; ctx.fillRect(70, boxY, 620, bH);
-                ctx.strokeStyle = '#fbcfe8'; ctx.lineWidth = 1.5; ctx.strokeRect(70, boxY, 620, bH);
+                ctx.strokeStyle = '#fbcfe8'; ctx.lineWidth = 1.2; ctx.strokeRect(70, boxY, 620, bH);
                 
-                ctx.fillStyle = '#1f2937'; ctx.font = 'bold 26px sans-serif';
-                let curY = wrapText(ctx, formData.description, 95, boxY + 50, 580, 38);
-                ctx.fillStyle = '#db2777'; ctx.font = 'italic 22px sans-serif';
-                wrapText(ctx, `🌟 ${formData.encouragement}`, 95, curY + 45, 580, 30);
+                ctx.fillStyle = '#1f2937'; ctx.font = 'bold 24px sans-serif';
+                let curY = wrapText(ctx, formData.description, 95, boxY + 45, 580, 34);
+                ctx.fillStyle = '#db2777'; ctx.font = 'italic 20px sans-serif';
+                wrapText(ctx, `🌟 ${formData.encouragement}`, 95, curY + 40, 580, 28);
 
-                // 7. 指標推擠 (在方框下 50px)
-                const idxY = boxY + bH + 50;
+                // 7. 指標推擠 (縮小尺寸)
+                const idxY = boxY + bH + 45;
                 const drawP = (x, y, v, c) => { 
-                    ctx.fillStyle = '#f3f4f6'; ctx.fillRect(x, y, 140, 15); 
-                    ctx.fillStyle = c; ctx.fillRect(x, y, 140 * (v/100), 15); 
+                    ctx.fillStyle = '#f3f4f6'; ctx.fillRect(x, y, 120, 12); 
+                    ctx.fillStyle = c; ctx.fillRect(x, y, 120 * (v/100), 12); 
                 };
-                ctx.font = 'bold 18px sans-serif'; ctx.fillStyle = '#db2777';
-                ctx.fillText('睡眠負債', 70, idxY); drawP(170, idxY - 18, formData.sleepIndex, '#ec4899');
-                ctx.fillText('崩潰指數', 370, idxY); drawP(470, idxY - 18, formData.breakdownIndex, '#ef4444');
+                ctx.font = 'bold 16px sans-serif'; ctx.fillStyle = '#db2777';
+                ctx.fillText('睡眠負債', 70, idxY); drawP(160, idxY - 14, formData.sleepIndex, '#ec4899');
+                ctx.fillText('崩潰指數', 350, idxY); drawP(440, idxY - 14, formData.breakdownIndex, '#ef4444');
 
                 // 8. 證號與 LOGO
-                ctx.font = 'bold 40px Courier, monospace'; ctx.fillStyle = '#be185d'; ctx.textAlign = 'right'; 
+                ctx.font = 'bold 36px Courier, monospace'; ctx.fillStyle = '#be185d'; ctx.textAlign = 'right'; 
                 ctx.fillText(formData.idNumber, 780, 605);
-                ctx.save(); ctx.translate(930, 545); ctx.fillStyle = '#db2777'; ctx.beginPath(); ctx.arc(0, 0, 18, 0, Math.PI * 2); ctx.fill();
-                ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('親子天下', 0, 48); ctx.restore();
+                ctx.save(); ctx.translate(930, 555); ctx.fillStyle = '#db2777'; ctx.beginPath(); ctx.arc(0, 0, 16, 0, Math.PI * 2); ctx.fill();
+                ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('親子天下', 0, 42); ctx.restore();
 
                 // 9. 照片
-                ctx.fillStyle = '#f9fafb'; ctx.fillRect(730, 160, 240, 320); ctx.strokeStyle = '#e5e7eb'; ctx.strokeRect(730, 170, 240, 320);
+                ctx.fillStyle = '#f9fafb'; ctx.fillRect(730, 170, 230, 300); ctx.strokeStyle = '#e5e7eb'; ctx.strokeRect(730, 170, 230, 300);
                 if (profileImage) {
                     const img = new Image(); img.src = profileImage;
-                    img.onload = () => { ctx.drawImage(img, 730, 170, 240, 320); finalize(); };
+                    img.onload = () => { ctx.drawImage(img, 730, 170, 230, 300); finalize(); };
                 } else {
-                    ctx.font = '160px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(formData.animalEmoji, 850, 360); finalize();
+                    ctx.font = '140px sans-serif'; ctx.textAlign = 'center'; ctx.fillText(formData.animalEmoji, 845, 360); finalize();
                 }
 
                 function finalize() {
@@ -234,135 +234,134 @@
             };
 
             return (
-                <div className="w-full max-w-4xl mx-auto p-4 sm:p-10">
+                <div className="w-full max-w-4xl mx-auto p-4 sm:p-8">
                     {step === 'welcome' && (
-                        <div className="bg-white p-8 sm:p-16 rounded-[40px] shadow-2xl border border-pink-100 text-center animate-fade">
-                            <Icon name="heart" className="w-20 h-20 text-pink-600 mx-auto mb-6 fill-pink-600 animate-pulse" />
-                            <h1 className="text-3xl sm:text-5xl font-black text-pink-600 mb-6 tracking-tight">台灣媽媽角色屬性測驗</h1>
-                            <p className="text-slate-500 mb-10 text-lg sm:text-xl leading-relaxed">三題測出妳的專屬動物角色，並領取專屬媽媽身分證！</p>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 text-left max-w-2xl mx-auto">
-                                <div className="space-y-3">
-                                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2"><Icon name="user" /> 妳的名字</label>
-                                    <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full px-6 py-4 border-2 border-slate-100 rounded-2xl text-xl font-bold outline-none focus:border-pink-500 bg-white transition-all shadow-inner" />
+                        <div className="bg-white p-8 sm:p-12 rounded-[32px] shadow-2xl border border-pink-100 text-center animate-fade">
+                            <Icon name="heart" className="w-16 h-16 text-pink-600 mx-auto mb-4" fill="#db2777" />
+                            <h1 className="text-2xl sm:text-4xl font-black text-pink-600 mb-4">台灣媽媽角色屬性測驗</h1>
+                            <p className="text-slate-500 mb-8 text-base sm:text-lg">三題測出妳的專屬動物角色，並領取專屬媽媽身分證！</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 text-left max-w-2xl mx-auto">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1"><Icon name="user" /> 妳的名字</label>
+                                    <input type="text" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full px-5 py-3 border-2 border-slate-100 rounded-2xl text-lg font-bold outline-none focus:border-pink-500 bg-slate-50 transition-all" />
                                 </div>
-                                <div className="space-y-3">
-                                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2"><Icon name="calendar" /> 上任西元年份</label>
-                                    <select value={formData.becomeMomYear} onChange={(e) => setFormData({...formData, becomeMomYear: e.target.value})} className="w-full px-6 py-4 border-2 border-slate-100 rounded-2xl text-xl font-bold outline-none focus:border-pink-500 bg-white shadow-inner cursor-pointer appearance-none">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1"><Icon name="calendar" /> 成為媽媽的西元年份</label>
+                                    <select value={formData.becomeMomYear} onChange={(e) => setFormData({...formData, becomeMomYear: e.target.value})} className="w-full px-5 py-3 border-2 border-slate-100 rounded-2xl text-lg font-bold outline-none focus:border-pink-500 bg-slate-50">
                                         {years.map(y => <option key={y} value={y}>{y} 年</option>)}
                                     </select>
                                 </div>
                             </div>
-                            <button onClick={() => setStep('quiz')} className="bg-pink-600 text-white px-16 py-5 rounded-full text-2xl font-black hover:bg-pink-700 transition-all shadow-xl flex items-center gap-4 mx-auto active:scale-95 group">開始測驗 <Icon name="chevron-right" className="group-hover:translate-x-1 transition-transform" /></button>
+                            <button onClick={() => setStep('quiz')} className="bg-pink-600 text-white px-12 py-4 rounded-full text-xl font-bold hover:bg-pink-700 transition-all shadow-xl flex items-center gap-3 mx-auto active:scale-95">開始測驗 <Icon name="chevron-right" /></button>
                         </div>
                     )}
 
                     {step === 'quiz' && (
-                        <div className="bg-white p-8 sm:p-14 rounded-[40px] shadow-2xl border border-slate-100 animate-fade max-w-3xl mx-auto">
-                            <div className="flex justify-between items-center mb-10">
-                                <span className="text-pink-600 font-black text-lg tracking-wider">Question {currentQuestion + 1} / {quizData.length}</span>
-                                <div className="h-3 w-32 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="bg-white p-6 sm:p-10 rounded-[32px] shadow-2xl border border-slate-100 animate-fade max-w-3xl mx-auto">
+                            <div className="flex justify-between items-center mb-6">
+                                <span className="text-pink-600 font-black text-sm uppercase">Question {currentQuestion + 1} / {quizData.length}</span>
+                                <div className="h-2 w-24 bg-slate-100 rounded-full overflow-hidden">
                                     <div className="h-full bg-pink-600 transition-all duration-300" style={{width: `${((currentQuestion + 1) / quizData.length) * 100}%`}}></div>
                                 </div>
                             </div>
-                            <h2 className="text-2xl sm:text-4xl font-black mb-12 text-slate-800 leading-snug">{quizData[currentQuestion].question}</h2>
-                            <div className="space-y-5 text-left">
+                            <h2 className="text-xl sm:text-3xl font-black mb-8 text-slate-800 leading-snug">{quizData[currentQuestion].question}</h2>
+                            <div className="space-y-3 text-left">
                                 {quizData[currentQuestion].options.map((opt, idx) => (
-                                    <button key={idx} onClick={() => handleAnswer(opt.type)} className="w-full p-6 text-left border-2 border-slate-50 rounded-3xl hover:border-pink-500 hover:bg-pink-50 transition-all text-xl font-bold text-slate-700 shadow-sm active:scale-[0.98]">{opt.text}</button>
+                                    <button key={idx} onClick={() => handleAnswer(opt.type)} className="w-full p-5 text-left border-2 border-slate-50 rounded-2xl hover:border-pink-500 hover:bg-pink-50 transition-all text-lg font-bold text-slate-700 shadow-sm active:bg-pink-100">{opt.text}</button>
                                 ))}
                             </div>
                         </div>
                     )}
 
                     {step === 'result' && (
-                        <div className="space-y-10 animate-fade w-full">
+                        <div className="space-y-8 animate-fade w-full">
                             <div className="flex justify-center">
-                                <div className="relative min-w-[320px] max-w-[750px] w-full h-auto bg-white rounded-2xl border border-slate-200 shadow-2xl p-6 sm:p-12 flex flex-col id-pattern">
+                                <div className="relative min-w-[320px] max-w-[750px] w-full h-auto bg-white rounded-2xl border border-slate-200 shadow-2xl p-5 sm:p-10 flex flex-col id-pattern">
                                     <div className="relative z-10 flex flex-col h-full">
-                                        <div className="flex items-center justify-between mb-8 sm:mb-12">
-                                            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-pink-600 rounded-full flex items-center justify-center text-white shadow-xl flex-shrink-0"><Icon name="heart" className="w-8 h-8 sm:w-12 sm:h-12" fill="white" /></div>
-                                            <h3 className="text-xl sm:text-4xl font-black text-slate-700 tracking-[0.4em] uppercase text-center w-full">台灣媽媽專屬身分證</h3>
-                                            <div className="w-12 sm:w-16 flex-shrink-0 hidden sm:block"></div>
+                                        <div className="flex items-center justify-between mb-6 sm:mb-10">
+                                            <div className="w-10 h-10 sm:w-14 sm:h-14 bg-pink-600 rounded-full flex items-center justify-center text-white shadow-xl flex-shrink-0"><Icon name="heart" className="w-5 h-5 sm:w-7 sm:h-7" fill="white" /></div>
+                                            <h3 className="text-lg sm:text-3xl font-black text-slate-700 tracking-[0.4em] uppercase text-center w-full">台灣媽媽專屬身分證</h3>
+                                            <div className="w-10 sm:w-14 flex-shrink-0 hidden sm:block"></div>
                                         </div>
                                         
-                                        <div className="flex flex-col sm:flex-row gap-6 sm:gap-14">
-                                            <div className="flex-1 space-y-6 sm:space-y-10 text-left">
-                                                <div className="flex items-center gap-6 sm:gap-10 border-b-2 border-slate-50 pb-2 flex-wrap">
-                                                    <div className="flex items-baseline gap-4 sm:gap-6">
-                                                        <span className="text-sm sm:text-xl font-bold text-pink-600 whitespace-nowrap tracking-widest uppercase">姓 名</span>
-                                                        <span className="text-2xl sm:text-6xl font-black text-black">{formData.name}</span>
+                                        <div className="flex flex-col sm:flex-row gap-5 sm:gap-10">
+                                            <div className="flex-1 space-y-5 sm:space-y-8 text-left">
+                                                <div className="flex items-center gap-4 sm:gap-8 border-b-2 border-slate-50 pb-2 flex-wrap">
+                                                    <div className="flex items-baseline gap-3 sm:gap-5">
+                                                        <span className="text-xs sm:text-lg font-bold text-pink-600 whitespace-nowrap tracking-widest uppercase">姓 名</span>
+                                                        <span className="text-xl sm:text-4xl font-black text-black">{formData.name}</span>
                                                     </div>
-                                                    {/* UI 修正：年資移到姓名旁邊 */}
-                                                    <div className="flex items-baseline gap-2 bg-pink-50 px-3 py-1 rounded-full">
-                                                        <span className="text-[10px] sm:text-sm font-bold text-pink-600 uppercase">媽媽年資</span>
-                                                        <span className="text-lg sm:text-3xl font-black text-pink-700">{calculateSeniority()}</span>
+                                                    <div className="flex items-baseline gap-2 bg-pink-50 px-2 py-0.5 rounded-full">
+                                                        <span className="text-[9px] sm:text-xs font-bold text-pink-600 uppercase">媽媽年資</span>
+                                                        <span className="text-base sm:text-2xl font-black text-pink-700">{calculateSeniority()}</span>
                                                     </div>
                                                 </div>
                                                 
-                                                <div className="flex items-center gap-4">
-                                                    <div className="flex flex-col text-[10px] sm:text-sm text-pink-600 font-bold leading-tight uppercase"><span>成 為 媽 媽</span><span>年 份</span></div>
-                                                    <span className="text-xl sm:text-3xl font-black text-slate-800 tracking-tight">西元 {formData.becomeMomYear} 年</span>
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex flex-col text-[9px] sm:text-xs text-pink-600 font-bold leading-tight uppercase"><span>成 為 媽 媽</span><span>年 份</span></div>
+                                                    <span className="text-lg sm:text-2xl font-black text-slate-800 tracking-tight">西元 {formData.becomeMomYear} 年</span>
                                                 </div>
 
-                                                <div className="flex items-baseline gap-6 sm:gap-10">
-                                                    <span className="text-sm sm:text-xl font-bold text-pink-600 whitespace-nowrap tracking-widest uppercase">角 色</span>
-                                                    <span className="text-lg sm:text-3xl font-black text-slate-600 leading-tight">{formData.animal} <span className="text-sm sm:text-xl font-normal text-slate-400">({formData.title})</span></span>
+                                                <div className="flex items-baseline gap-4 sm:gap-8">
+                                                    <span className="text-xs sm:text-lg font-bold text-pink-600 whitespace-nowrap tracking-widest uppercase">角 色</span>
+                                                    <span className="text-base sm:text-2xl font-black text-slate-600 leading-tight">{formData.animal} <span className="text-xs sm:text-lg font-normal text-slate-400">({formData.title})</span></span>
                                                 </div>
                                                 
-                                                <div className="bg-pink-50/60 border-l-8 border-pink-200 py-4 px-6 sm:py-6 sm:px-8 rounded-r-xl">
-                                                    <p className="text-sm sm:text-2xl font-bold text-slate-800 leading-normal mb-2">{formData.description}</p>
-                                                    <p className="text-xs sm:text-lg font-medium italic text-pink-600 flex items-center gap-2"><Icon name="star" className="w-5 h-5" fill="#db2777" /> {formData.encouragement}</p>
+                                                <div className="bg-pink-50/60 border-l-8 border-pink-200 py-3 px-4 sm:py-4 sm:px-6 rounded-r-xl">
+                                                    <p className="text-xs sm:text-lg font-bold text-slate-800 leading-normal mb-1">{formData.description}</p>
+                                                    <p className="text-[10px] sm:text-base font-medium italic text-pink-600 flex items-center gap-2"><Icon name="star" className="w-4 h-4" fill="#db2777" /> {formData.encouragement}</p>
                                                 </div>
                                                 
-                                                <div className="grid grid-cols-2 gap-10">
-                                                    <div className="space-y-3"><span className="font-black text-pink-600 uppercase tracking-widest text-[10px] sm:text-sm">睡眠負債 {formData.sleepIndex}%</span><div className="h-3 sm:h-4 w-full bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-pink-500" style={{width: `${formData.sleepIndex}%`}}></div></div></div>
-                                                    <div className="space-y-3"><span className="font-black text-red-600 uppercase tracking-widest text-[10px] sm:text-sm">崩潰指數 {formData.breakdownIndex}%</span><div className="h-3 sm:h-4 w-full bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-red-400" style={{width: `${formData.breakdownIndex}%`}}></div></div></div>
+                                                <div className="grid grid-cols-2 gap-8">
+                                                    <div className="space-y-2"><span className="font-black text-pink-600 uppercase tracking-widest text-[9px] sm:text-xs">睡眠負債 {formData.sleepIndex}%</span><div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-pink-500" style={{width: `${formData.sleepIndex}%`}}></div></div></div>
+                                                    <div className="space-y-2"><span className="font-black text-red-600 uppercase tracking-widest text-[9px] sm:text-xs">崩潰指數 {formData.breakdownIndex}%</span><div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-red-400" style={{width: `${formData.breakdownIndex}%`}}></div></div></div>
                                                 </div>
                                             </div>
                                             
-                                            <div className="w-full sm:w-64 flex flex-col items-center flex-shrink-0">
-                                                <div className="w-48 sm:w-full aspect-[3/4] bg-slate-50 rounded-2xl border-4 sm:border-8 border-white shadow-2xl flex items-center justify-center mb-4 overflow-hidden ring-1 ring-slate-100">
-                                                    {profileImage ? <img src={profileImage} alt="Profile" className="w-full h-full object-cover" /> : <div className="text-7xl sm:text-[180px] select-none grayscale-[0.2]">{formData.animalEmoji}</div>}
+                                            <div className="w-full sm:w-56 flex flex-col items-center flex-shrink-0">
+                                                <div className="w-40 sm:w-full aspect-[3/4] bg-slate-50 rounded-2xl border-4 sm:border-8 border-white shadow-xl flex items-center justify-center mb-3 overflow-hidden ring-1 ring-slate-100">
+                                                    {profileImage ? <img src={profileImage} alt="Profile" className="w-full h-full object-cover" /> : <div className="text-6xl sm:text-[150px] select-none grayscale-[0.2]">{formData.animalEmoji}</div>}
                                                 </div>
-                                                <div className="text-[10px] sm:text-sm text-slate-300 font-mono italic tracking-widest uppercase">ISSUED: {formData.issueDate}</div>
+                                                <div className="text-[9px] sm:text-xs text-slate-300 font-mono italic tracking-widest uppercase">ISSUED: {formData.issueDate}</div>
                                             </div>
                                         </div>
                                         
-                                        <div className="mt-12 sm:mt-16 flex justify-between items-end border-t-2 border-slate-50 pt-6 sm:pt-10">
-                                            <div className="text-2xl sm:text-6xl font-bold font-mono text-pink-700 opacity-30 tracking-tighter">{formData.idNumber}</div>
-                                            <div className="flex flex-col items-center flex-shrink-0 group"><Icon name="heart" className="w-8 h-8 sm:w-12 sm:h-12 text-pink-500 transition-transform group-hover:scale-110" fill="#ec4899" /><span className="text-[10px] sm:text-xl font-black text-pink-500 tracking-tighter uppercase">親子天下</span></div>
+                                        <div className="mt-8 sm:mt-12 flex justify-between items-end border-t-2 border-slate-50 pt-5 sm:pt-8">
+                                            <div className="text-xl sm:text-5xl font-bold font-mono text-pink-700 opacity-30 tracking-tighter">{formData.idNumber}</div>
+                                            <div className="flex flex-col items-center flex-shrink-0 group"><Icon name="heart" className="w-6 h-6 sm:w-10 sm:h-10 text-pink-500 transition-transform group-hover:scale-110" fill="#ec4899" /><span className="text-[9px] sm:text-sm font-black text-pink-500 tracking-tighter uppercase">親子天下</span></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto w-full">
-                                <div className="bg-white p-8 rounded-[32px] shadow-xl space-y-8 border border-slate-100 text-left text-slate-700">
-                                    <h4 className="text-xl font-black text-pink-600 flex items-center gap-3 border-b pb-4"><Icon name="user" /> 個人化您的證件</h4>
-                                    <div className="space-y-6">
-                                        <div className="grid grid-cols-2 gap-6">
-                                            <div className="space-y-2">
+                                <div className="bg-white p-6 rounded-[24px] shadow-xl space-y-6 border border-slate-100 text-left text-slate-700">
+                                    <h4 className="text-lg font-black text-pink-600 flex items-center gap-2 border-b pb-3"><Icon name="user" /> 個人化您的證件</h4>
+                                    <div className="space-y-4">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-1">
                                                 <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">修改年份</label>
-                                                <select value={formData.becomeMomYear} onChange={(e) => setFormData({...formData, becomeMomYear: e.target.value})} className="w-full px-4 py-4 border border-slate-200 rounded-2xl text-lg outline-none bg-white focus:ring-4 focus:ring-pink-100 transition-all cursor-pointer">
+                                                <select value={formData.becomeMomYear} onChange={(e) => setFormData({...formData, becomeMomYear: e.target.value})} className="w-full px-4 py-3 border border-slate-200 rounded-xl text-base outline-none bg-white focus:ring-2 focus:ring-pink-100 transition-all cursor-pointer">
                                                     {years.map(y => <option key={y} value={y}>{y} 年</option>)}
                                                 </select>
                                             </div>
                                             <div className="flex items-end">
-                                                <label className="w-full flex items-center justify-center gap-3 px-4 py-4 bg-pink-50 text-pink-600 rounded-2xl cursor-pointer hover:bg-pink-100 border-2 border-dashed border-pink-200 font-black text-base shadow-sm transition-colors"><Icon name="camera" /> 上傳照片<input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" /></label>
+                                                <label className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-pink-50 text-pink-600 rounded-2xl cursor-pointer hover:bg-pink-100 border-2 border-dashed border-pink-200 font-black text-sm shadow-sm transition-colors"><Icon name="camera" /> 上傳照片<input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" /></label>
                                             </div>
                                         </div>
-                                        <button onClick={() => {setStep('welcome'); setCurrentQuestion(0); setScores({L:0,K:0,C:0,P:0});}} className="w-full py-5 text-slate-400 font-bold flex items-center justify-center gap-3 hover:text-pink-600 transition-all bg-slate-50 rounded-2xl text-lg border border-transparent hover:border-slate-200 shadow-sm"><Icon name="refresh-cw" /> 重新製作一張</button>
+                                        <button onClick={() => {setStep('welcome'); setCurrentQuestion(0); setScores({L:0,K:0,C:0,P:0});}} className="w-full py-4 text-slate-400 font-bold flex items-center justify-center gap-3 hover:text-pink-600 transition-all bg-slate-50 rounded-2xl text-base border border-transparent hover:border-slate-200 shadow-sm"><Icon name="refresh-cw" /> 重新製作一張</button>
                                     </div>
                                 </div>
-                                <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-black p-10 rounded-[32px] shadow-2xl flex flex-col justify-center text-center relative overflow-hidden group">
+                                <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-black p-8 rounded-[24px] shadow-2xl flex flex-col justify-center text-center relative overflow-hidden group">
                                     <Icon name="star" className="absolute -top-10 -right-10 text-yellow-400 opacity-10 w-48 h-48 rotate-12 transition-transform group-hover:scale-110" />
-                                    <p className="text-white text-xl font-bold mb-8 flex items-center justify-center gap-3 relative z-10"><Icon name="star" className="text-yellow-400" fill="#facc15" /> 分析結果：妳是「{formData.animal}」</p>
-                                    <button onClick={downloadIDCard} className="bg-pink-600 text-white hover:bg-pink-500 font-black py-6 rounded-2xl text-2xl flex items-center justify-center gap-4 transition-all active:scale-95 shadow-2xl relative z-10"><Icon name="download" /> 下載正式身分證</button>
+                                    <p className="text-white text-lg font-bold mb-6 flex items-center justify-center gap-3 relative z-10"><Icon name="star" className="text-yellow-400" fill="#facc15" /> 分析結果：妳是「{formData.animal}」</p>
+                                    <button onClick={downloadIDCard} className="bg-pink-600 text-white hover:bg-pink-500 font-black py-5 rounded-2xl text-xl flex items-center justify-center gap-4 transition-all active:scale-95 shadow-2xl relative z-10"><Icon name="download" /> 下載正式身分證</button>
                                 </div>
                             </div>
                         </div>
                     )}
-                    <footer className="mt-16 mb-10 text-center opacity-60">
-                        <p className="text-slate-500 text-sm sm:text-lg font-medium flex items-center justify-center gap-3 px-4 leading-relaxed">由親子天下媒體中心策劃製作 <Icon name="heart" className="w-4 h-4" fill="#cbd5e1" /> 向所有台灣超人媽媽致敬</p>
+                    <footer className="mt-12 mb-8 text-center opacity-60">
+                        <p className="text-slate-500 text-xs sm:text-base font-medium flex items-center justify-center gap-3 px-4 leading-relaxed">由親子天下媒體中心策劃製作 <Icon name="heart" className="w-4 h-4" fill="#cbd5e1" /> 向所有台灣超人媽媽致敬</p>
                     </footer>
                     <canvas ref={canvasRef} className="hidden"></canvas>
                 </div>
